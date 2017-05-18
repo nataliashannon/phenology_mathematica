@@ -1,0 +1,1908 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     85945,       1900]
+NotebookOptionsPosition[     84670,       1852]
+NotebookOutlinePosition[     85048,       1869]
+CellTagsIndexPosition[     85005,       1866]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Parameters and data importation", "Section",
+ CellChangeTimes->{{3.639096191298176*^9, 3.639096219687299*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{"Here", ",", " ", 
+    RowBox[{
+    "I", " ", "define", " ", "most", " ", "of", " ", "the", " ", "parameters",
+      " ", "that", " ", "will", " ", "be", " ", "used", " ", "throughout", 
+     " ", "the", " ", 
+     RowBox[{"model", ":", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{
+      "beginDate", " ", "is", " ", "the", " ", "ordinal", " ", "date", " ", 
+       "at", " ", "which", " ", "the", " ", "model", " ", "begins", " ", 
+       RowBox[{"(", "273", ")"}], " ", "which", " ", "corresponds", " ", "to",
+        " ", "1", " ", 
+       RowBox[{
+       "October", ".", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        "totalDays"}], " ", "is", " ", "the", " ", "total", " ", "number", 
+       " ", "of", " ", "days", " ", "this", " ", "model", " ", "will", " ", 
+       "run", " ", "through"}]}]}], ",", 
+    RowBox[{"beginning", " ", "with", " ", "1", " ", "October"}], ",", 
+    RowBox[{
+    "2013", " ", "and", " ", "ending", " ", "with", " ", "31", " ", 
+     "August"}], ",", 
+    RowBox[{
+    "2014.", "\[IndentingNewLine]", "\[IndentingNewLine]", "minChillTemp", 
+     " ", "and", " ", "maxChillTemp", " ", "are", " ", "the", " ", "minimum", 
+     " ", "and", " ", "maximum", " ", "temperatures", " ", "at", " ", "which",
+      " ", "plants", " ", "accumulate", " ", "chilling", " ", "units", " ", 
+     RowBox[{
+      RowBox[{"(", "CUs", ")"}], ".", "\[IndentingNewLine]", "r"}], " ", 
+     "\[IndentingNewLine]", "chillRequirement", " ", "is", " ", "the", " ", 
+     "minimum", " ", "number", " ", "of", " ", "CUs", " ", "a", " ", "plant", 
+     " ", "must", " ", "accumulate", " ", "in", " ", "order", " ", "to", " ", 
+     "undergo", " ", 
+     RowBox[{"vernalization", ".", "\[IndentingNewLine]", "tBasePlant"}], " ",
+      "and", " ", "tBaseInsect", " ", "are", " ", "the", " ", "base", " ", 
+     "temperatures", " ", "used", " ", "in", " ", "calculating", " ", 
+     "growing", " ", "degree", " ", "days", " ", 
+     RowBox[{
+      RowBox[{"(", "GDDs", ")"}], ".", "\[IndentingNewLine]", 
+      "\[IndentingNewLine]", "targetGDDPlant"}], " ", "and", " ", "target", 
+     " ", "GDDInsect", " ", "are", " ", "the", " ", "number", " ", "of", " ", 
+     "growing", " ", "degree", " ", "days", " ", "for", " ", "plants", " ", 
+     "and", " ", "insects", " ", "to", " ", "flower", " ", "or", " ", 
+     "emerge"}], ",", " ", 
+    RowBox[{
+     RowBox[{
+     "respectively", ".", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      "replications"}], " ", "is", " ", "the", " ", "total", " ", "number", 
+     " ", "of", " ", "replications"}], ",", " ", 
+    RowBox[{
+    "which", " ", "includes", " ", "temperature", " ", "increases", " ", 
+     "from", " ", "0", " ", 
+     RowBox[{"(", "startDT", ")"}], " ", "to", " ", "endDT", " ", "degrees", 
+     " ", "C"}], ",", " ", 
+    RowBox[{"in", " ", "0.1", " ", "degree", " ", 
+     RowBox[{"increments", ".", " ", "replications"}], " ", "is", " ", 
+     "calculated", " ", "so", " ", "that", " ", "endDT", " ", "is", " ", 
+     "the", " ", "only", " ", "variable", " ", "that", " ", "needs", " ", 
+     "to", " ", "be", " ", "changed", " ", "when", " ", "deciding", " ", "to",
+      " ", "run", " ", "the", " ", "program", " ", "with", " ", "a", " ", 
+     "different", " ", "range", " ", "of", " ", 
+     RowBox[{"temperatures", "."}]}]}], "*)"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"beginDate", "=", "273"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"totalDays", "=", "334"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"minChillTemp", "=", "0"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"maxChillTemp", "=", "7.2"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"chillRequirement", "=", "300"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"tBasePlant", "=", "7"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"tBaseInsect", "=", "9"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"targetGDDPlant", "=", "230"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"targetGDDInsect", "=", "90"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"startDT", "=", "0"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"endDT", "=", "5"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"replications", "=", 
+     RowBox[{
+      RowBox[{"endDT", "*", "10"}], "+", "1"}]}], ";"}], 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"I", "'"}], "m", " ", "importing", " ", "data", " ", "file", 
+      " ", "from", " ", "NOAA"}], ",", " ", 
+     RowBox[{
+     "featuring", " ", "climate", " ", "data", " ", "in", " ", "Benton", " ", 
+      "County", " ", "Oregon", " ", "in", " ", "2013", " ", "and", " ", 
+      "2014.", " ", "The", " ", "data", " ", "file", " ", "includes", " ", 
+      "various", " ", "irrelevant", " ", "data"}], ",", " ", 
+     RowBox[{
+     "but", " ", "it", " ", "is", " ", "left", " ", "unaltered", " ", "so", 
+      " ", "that", " ", "datasets", " ", "in", " ", "the", " ", "same", " ", 
+      "format", " ", "can", " ", "be", " ", "used", " ", "for", " ", 
+      "different", " ", 
+      RowBox[{"locations", "."}]}]}], "*)"}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"dataRaw", "=", 
+     RowBox[{
+     "Import", "[", "\"\</Users/natalia/BentonClimate.csv\>\"", "]"}]}], 
+    ";"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{
+     "These", " ", "four", " ", "arrays", " ", "are", " ", "created", " ", 
+      "to", " ", "store", " ", "chill"}], ",", " ", "flowering", ",", " ", 
+     RowBox[{"and", " ", "emergence", " ", "dates"}], ",", " ", "mismatch", 
+     ",", " ", 
+     RowBox[{"and", " ", 
+      RowBox[{"deltaT", ".", " ", "There"}], " ", "will", " ", "be", " ", 
+      "one", " ", "data", " ", "value", " ", "for", " ", "each", " ", 
+      "replication", " ", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"for", " ", "each", " ", "0.1", " ", "degrees"}], ")"}], ".", 
+       "\[IndentingNewLine]", "The"}], " ", "rest", " ", "of", " ", "the", 
+      " ", "arrays", " ", "used", " ", "in", " ", "the", " ", "program", " ", 
+      "will", " ", "be", " ", "created", " ", "right", " ", "before", " ", 
+      "they", " ", "are", " ", "filled"}], ",", " ", 
+     RowBox[{"in", " ", "their", " ", "respective", " ", 
+      RowBox[{"sections", ".", " ", "The"}], " ", "four", " ", "arrays", " ", 
+      "below", " ", "are", " ", "those", " ", "that", " ", "will", " ", "be", 
+      " ", "used", " ", "to", " ", "plot", " ", "the", " ", 
+      RowBox[{"results", "."}]}]}], "*)"}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"chillingDates", "=", 
+     RowBox[{"ConstantArray", "[", 
+      RowBox[{"c", ",", "replications"}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"floweringDates", "=", 
+     RowBox[{"ConstantArray", "[", 
+      RowBox[{"c", ",", "replications"}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"emergenceDates", "=", 
+     RowBox[{"ConstantArray", "[", 
+      RowBox[{"c", ",", "replications"}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"mismatchArray", "=", 
+     RowBox[{"ConstantArray", "[", 
+      RowBox[{"c", ",", "replications"}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"allTemperatures", "=", 
+     RowBox[{"ConstantArray", "[", 
+      RowBox[{"c", ",", "replications"}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{
+     "allTemperatures", " ", "stores", " ", "values", " ", "from", " ", 
+      "startDT", " ", "to", " ", "endDT"}], ",", " ", 
+     RowBox[{"incremented", " ", "by", " ", "0.1", " ", "degree", " ", 
+      RowBox[{"C", "."}]}]}], "*)"}]}]}]], "Input",
+ CellChangeTimes->{{3.638901930374234*^9, 3.638901930709794*^9}, {
+   3.6389070269389553`*^9, 3.638907037345543*^9}, {3.638907104609524*^9, 
+   3.638907105239378*^9}, 3.638909467196849*^9, {3.638909640940526*^9, 
+   3.6389096413461037`*^9}, {3.6389097165932617`*^9, 3.638909768447259*^9}, {
+   3.638909891506791*^9, 3.638909891771597*^9}, {3.6389100839679832`*^9, 
+   3.638910118229774*^9}, {3.6389107275971813`*^9, 3.6389107356217413`*^9}, {
+   3.638913243123684*^9, 3.638913243233857*^9}, {3.638913852787732*^9, 
+   3.638913854929034*^9}, 3.638914357311343*^9, {3.6389156577853813`*^9, 
+   3.638915669696219*^9}, {3.6389157098810463`*^9, 3.638915712118946*^9}, {
+   3.638992569868289*^9, 3.6389925817388487`*^9}, 3.6389928287860537`*^9, {
+   3.6389928616523*^9, 3.638992867189444*^9}, {3.638992918053053*^9, 
+   3.638992918219358*^9}, {3.639095971349061*^9, 3.639095996348299*^9}, {
+   3.6390961820305653`*^9, 3.639096188712902*^9}, {3.639096222906019*^9, 
+   3.639096276060523*^9}, 3.639096384788506*^9, 3.639098293321845*^9, {
+   3.639098754710552*^9, 3.639098755437175*^9}, {3.6391434361909027`*^9, 
+   3.6391434505000343`*^9}, {3.639145646477601*^9, 3.639145650067155*^9}, {
+   3.639146425074304*^9, 3.63914642514073*^9}, {3.6391465114281178`*^9, 
+   3.63914651513879*^9}, {3.6391465468704023`*^9, 3.6391465940525227`*^9}, {
+   3.63914696031691*^9, 3.639146989502694*^9}, {3.639147139987155*^9, 
+   3.639147275075511*^9}, {3.63932832354887*^9, 3.639328323900855*^9}, {
+   3.6393283618322277`*^9, 3.639328364211782*^9}, {3.639328980379798*^9, 
+   3.6393289804979477`*^9}, {3.63933078772449*^9, 3.6393308909269943`*^9}, {
+   3.639330982675523*^9, 3.639331059002531*^9}, {3.6393314269525013`*^9, 
+   3.639331440454093*^9}, {3.639335425609683*^9, 3.639335436297484*^9}, {
+   3.639336079125806*^9, 3.639336080084425*^9}, {3.6393361153089113`*^9, 
+   3.6393361262550917`*^9}, {3.639336660008789*^9, 3.639336691124855*^9}, {
+   3.639337063043346*^9, 3.639337066321452*^9}, {3.639346963519227*^9, 
+   3.639347117598216*^9}, {3.639347161553659*^9, 3.6393472692741747`*^9}, {
+   3.639347313098678*^9, 3.6393474984828*^9}, {3.639347532018984*^9, 
+   3.639347612218149*^9}, 3.639348062327971*^9, {3.639348839237849*^9, 
+   3.639348842130986*^9}, {3.639349788987508*^9, 3.639349884431213*^9}, {
+   3.6393499244899178`*^9, 3.639349948255516*^9}, {3.6394046972290792`*^9, 
+   3.6394046973952417`*^9}, {3.6394048744415903`*^9, 3.639404890580196*^9}, {
+   3.639408714867916*^9, 3.6394087237171783`*^9}, {3.6394089114272003`*^9, 
+   3.63940891327205*^9}, {3.639415409323887*^9, 3.639415465383602*^9}, {
+   3.639415509475196*^9, 3.6394155246051397`*^9}, {3.639415618997684*^9, 
+   3.639415621994195*^9}, {3.6394156828317747`*^9, 3.639415687875115*^9}, {
+   3.639415723443922*^9, 3.639415777548135*^9}, {3.6394158096734324`*^9, 
+   3.639415847351932*^9}, {3.6394158967805347`*^9, 3.639415900703466*^9}, {
+   3.6394159475008698`*^9, 3.639416034722328*^9}, {3.63941615348633*^9, 
+   3.639416347581789*^9}, {3.6970723990593433`*^9, 3.697072399139312*^9}, {
+   3.697072592235515*^9, 3.697072617642788*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Data isolation", "Section",
+ CellChangeTimes->{{3.639096191298176*^9, 3.639096219687299*^9}, {
+  3.639096299466838*^9, 3.639096310599081*^9}, {3.6390968425144653`*^9, 
+  3.639096842818202*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"I", "'"}], "m", " ", "creating", " ", "a", " ", "two"}], "-", 
+     RowBox[{
+     "dimensional", " ", "array", " ", "to", " ", "store", " ", "ordinal", 
+      " ", "date"}]}], ",", " ", 
+    RowBox[{"daily", " ", "minimum", " ", "temperature"}], ",", " ", 
+    RowBox[{"and", " ", "daily", " ", "maximum", " ", 
+     RowBox[{"temperature", ".", " ", "The"}], " ", "array", " ", "will", " ",
+      "include", " ", "334", " ", "days", " ", "from", " ", "1", " ", 
+     "October"}], ",", " ", 
+    RowBox[{"2013", " ", "through", " ", "31", " ", "August"}], ",", " ", 
+    "2014."}], "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"dataFormatted", "=", 
+     RowBox[{"ConstantArray", "[", 
+      RowBox[{"c", ",", 
+       RowBox[{"{", 
+        RowBox[{"3", ",", "totalDays"}], "}"}]}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{
+     "This", " ", "function", " ", "converts", " ", "yyyymmdd", " ", "format",
+       " ", "dates", " ", "into", " ", "ordinal", " ", 
+      RowBox[{"dates", ".", " ", "It"}], " ", "is", " ", "necessary", " ", 
+      "to", " ", "make", " ", "the", " ", "imported", " ", "data", " ", 
+      RowBox[{
+      "usable", ".", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       "First"}]}], ",", " ", 
+     RowBox[{
+     "the", " ", "year", " ", "is", " ", "isolated", " ", "by", " ", 
+      "multiplying", " ", "and", " ", "rounding", " ", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"20130101", " ", "\[Rule]", " ", 
+         RowBox[{"2013.0101", " ", "\[Rule]", " ", "2013"}]}], ")"}], ".", 
+       "\[IndentingNewLine]", "Then"}], " ", "this", " ", "value", " ", "is", 
+      " ", "multiplied", " ", "times", " ", "10000", " ", "and", " ", 
+      "subtracted", " ", "from", " ", "the", " ", "data", " ", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"20130101", " ", "-", " ", "2013"}], " ", "=", " ", "0101"}], 
+       ")"}]}], ",", " ", 
+     RowBox[{"leaving", " ", "the", " ", "month", " ", "and", " ", 
+      RowBox[{"day", ".", "\[IndentingNewLine]", "The"}], " ", "day", " ", 
+      "is", " ", "calcualted", " ", "by", " ", "subtracting", " ", "10000", 
+      "*", "year", " ", "and", " ", "100", "*", "month", " ", "from", " ", 
+      "data", " ", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"20130101", " ", "-", " ", "2013", " ", "-", " ", "0100"}], 
+        " ", "=", " ", "01"}], ")"}]}], ",", " ", 
+     RowBox[{"leaving", " ", "the", " ", 
+      RowBox[{"day", ".", "\[IndentingNewLine]", "Several"}], " ", "If", " ", 
+      "statements", " ", "determine", " ", "the", " ", "number", " ", "of", 
+      " ", "days", " ", "to", " ", "add", " ", "to", " ", "the", " ", "day", 
+      " ", "value"}], ",", " ", 
+     RowBox[{"depending", " ", "on", " ", "the", " ", 
+      RowBox[{"month", "."}]}]}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"ordinalDateFunction", "[", "date_", "]"}], ":=", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"year", "=", 
+       RowBox[{"Floor", "[", 
+        RowBox[{"date", "/", "10000"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"month", "=", 
+       RowBox[{"Floor", "[", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"date", "-", 
+           RowBox[{"10000", "*", "year"}]}], ")"}], "/", "100"}], "]"}]}], 
+      ";", "\[IndentingNewLine]", 
+      RowBox[{"day", "=", 
+       RowBox[{"date", "-", 
+        RowBox[{"10000", "*", "year"}], "-", 
+        RowBox[{"100", "*", "month"}]}]}], ";", "\[IndentingNewLine]", 
+      "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"month", "==", "01"}], ",", 
+        RowBox[{"ordinalDate", "=", "day"}]}], "]"}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"month", "==", "02"}], ",", 
+        RowBox[{"ordinalDate", "=", 
+         RowBox[{"day", "+", "31"}]}]}], "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"month", "==", "03"}], ",", 
+        RowBox[{"ordinalDate", "=", 
+         RowBox[{"day", "+", "59"}]}]}], "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"month", "==", "04"}], ",", 
+        RowBox[{"ordinalDate", "=", 
+         RowBox[{"day", "+", "90"}]}]}], "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"month", "==", "05"}], ",", 
+        RowBox[{"ordinalDate", "=", 
+         RowBox[{"day", "+", "120"}]}]}], "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"month", "==", "06"}], ",", 
+        RowBox[{"ordinalDate", "=", 
+         RowBox[{"day", "+", "151"}]}]}], "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"month", "==", "07"}], ",", 
+        RowBox[{"ordinalDate", "=", 
+         RowBox[{"day", "+", "181"}]}]}], "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"month", "==", "08"}], ",", 
+        RowBox[{"ordinalDate", "=", 
+         RowBox[{"day", "+", "212"}]}]}], "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"month", "==", "09"}], ",", 
+        RowBox[{"ordinalDate", "=", 
+         RowBox[{"day", "+", "243"}]}]}], "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"month", "==", "10"}], ",", 
+        RowBox[{"ordinalDate", "=", 
+         RowBox[{"day", "+", "273"}]}]}], "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"month", "==", "11"}], ",", 
+        RowBox[{"ordinalDate", "=", 
+         RowBox[{"day", "+", "304"}]}]}], "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"month", "==", "12"}], ",", 
+        RowBox[{"ordinalDate", "=", 
+         RowBox[{"day", "+", "334"}]}]}], "]"}], ";", "\[IndentingNewLine]", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Return", "[", "ordinalDate", "]"}], ";"}], 
+     "\[IndentingNewLine]", ")"}]}], "\n", "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{
+     "This", "  ", "loop", " ", "fills", " ", "the", " ", "dataFormatted", 
+      " ", "array", " ", "with", " ", "values", " ", "from", " ", "the", " ", 
+      "csv", " ", 
+      RowBox[{"file", ".", " ", "Degrees"}], " ", "are", " ", "in", " ", 
+      "tenths", " ", "of", " ", "a", " ", "degree", " ", "C", " ", "in", " ", 
+      "the", " ", "data", " ", "file"}], ",", " ", 
+     RowBox[{
+     "so", " ", "they", " ", "are", " ", "converted", " ", "to", " ", "whole",
+       " ", "degrees", " ", "C", " ", "as", " ", 
+      RowBox[{"they", "'"}], "re", " ", "put", " ", "into", " ", "the", " ", 
+      RowBox[{"array", ".", " ", "\[IndentingNewLine]", "Dates"}], " ", "are",
+       " ", "in", " ", "a", " ", "yyyymmdd", " ", "format"}], ",", " ", 
+     RowBox[{"so", " ", 
+      RowBox[{"they", "'"}], "re", " ", "converted", " ", "into", " ", 
+      "ordinal", " ", "dates", " ", "via", " ", "ordinalDateFunction", " ", 
+      "as", " ", 
+      RowBox[{"they", "'"}], "re", " ", "stored", " ", "in", " ", "the", " ", 
+      
+      RowBox[{"array", "."}]}]}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"For", "[", 
+     RowBox[{
+      RowBox[{"n", "=", "1"}], ",", 
+      RowBox[{"n", "\[LessEqual]", "totalDays"}], ",", 
+      RowBox[{"n", "++"}], ",", 
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{"(*", "date", "*)"}], "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"dataFormatted", "[", 
+          RowBox[{"[", 
+           RowBox[{"1", ",", "n"}], "]"}], "]"}], "=", 
+         RowBox[{"ordinalDateFunction", "[", 
+          RowBox[{"dataRaw", "[", 
+           RowBox[{"[", 
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{"274", "+", "n"}], ")"}], ",", "6"}], "]"}], "]"}], 
+          "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{"daily", " ", "min", " ", "temperature", " ", 
+          RowBox[{"(", "tMin", ")"}]}], "*)"}], "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"dataFormatted", "[", 
+          RowBox[{"[", 
+           RowBox[{"2", ",", "n"}], "]"}], "]"}], "=", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"dataRaw", "[", 
+            RowBox[{"[", 
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{"274", "+", "n"}], ")"}], ",", "12"}], "]"}], "]"}], 
+           "/", "10"}], ")"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{"daily", " ", "max", " ", "temperature", " ", 
+          RowBox[{"(", "tMax", ")"}]}], "*)"}], "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"dataFormatted", "[", 
+          RowBox[{"[", 
+           RowBox[{"3", ",", "n"}], "]"}], "]"}], "=", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"dataRaw", "[", 
+            RowBox[{"[", 
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{"274", "+", "n"}], ")"}], ",", "7"}], "]"}], "]"}], 
+           "/", "10"}], ")"}]}], ";"}], "\[IndentingNewLine]", "}"}]}], "]"}],
+     ";"}], "\[IndentingNewLine]"}]}]], "Input",
+ CellChangeTimes->{{3.6384765000742207`*^9, 3.638476500331607*^9}, {
+   3.638476538725823*^9, 3.638476643664485*^9}, {3.6384786775413237`*^9, 
+   3.638478678669499*^9}, {3.638478761469047*^9, 3.638478762747415*^9}, {
+   3.6384797085471697`*^9, 3.638479708611669*^9}, {3.638480612684016*^9, 
+   3.638480626810652*^9}, {3.638480679601254*^9, 3.638480692572947*^9}, {
+   3.638654933149187*^9, 3.638654990585203*^9}, 3.638721632264986*^9, {
+   3.638727225704772*^9, 3.63872723814203*^9}, {3.6388808796093597`*^9, 
+   3.638880920154907*^9}, {3.638881167315207*^9, 3.63888117024636*^9}, {
+   3.638907111413467*^9, 3.6389071141277313`*^9}, {3.638907211592924*^9, 
+   3.638907213756649*^9}, {3.638907350027006*^9, 3.6389073592484818`*^9}, {
+   3.639096317119471*^9, 3.6390963374728518`*^9}, 3.639096863541786*^9, {
+   3.6390969045938473`*^9, 3.639096938564618*^9}, {3.6393283311717157`*^9, 
+   3.639328349778901*^9}, {3.6393476261151333`*^9, 3.639347653672724*^9}, {
+   3.639347701783495*^9, 3.63934772592549*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Temperature Interpolation", "Section",
+ CellChangeTimes->{{3.639096191298176*^9, 3.639096219687299*^9}, {
+   3.639096299466838*^9, 3.639096310599081*^9}, {3.6390968425144653`*^9, 
+   3.639096856617963*^9}, 3.639097235791469*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+   "This", " ", "multiline", " ", "function", " ", "uses", " ", "the", " ", 
+    "ordinal", " ", "date", " ", "to", " ", "calculate", " ", 
+    RowBox[{"solarDeclination", "."}]}], "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"solarDeclinationFunction", "[", "ordinalDate_", "]"}], ":=", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"gamma", "=", 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"2", 
+          RowBox[{"Pi", "/", "365"}]}], ")"}], "*", 
+        RowBox[{"(", 
+         RowBox[{"ordinalDate", "-", "1"}], ")"}]}]}], ";", 
+      "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"solarDeclination", "=", 
+       RowBox[{"0.006918", "-", 
+        RowBox[{"0.3999", 
+         RowBox[{"Cos", "[", "gamma", "]"}]}], "+", 
+        RowBox[{"0.070257", 
+         RowBox[{"Sin", "[", "gamma", "]"}]}], "-", 
+        RowBox[{"0.006758", 
+         RowBox[{"Cos", "[", 
+          RowBox[{"2", "gamma"}], "]"}]}], "+", 
+        RowBox[{"0.000907", 
+         RowBox[{"Sin", "[", 
+          RowBox[{"2", "gamma"}], "]"}]}], "-", 
+        RowBox[{"0.002697", 
+         RowBox[{"Cos", "[", 
+          RowBox[{"3", "gamma"}], "]"}]}], "+", 
+        RowBox[{"0.00148", 
+         RowBox[{"Sin", "[", 
+          RowBox[{"3", "gamma"}], "]"}]}]}]}], ";", "\[IndentingNewLine]", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Return", "[", "solarDeclination", "]"}], ";"}], 
+     "\[IndentingNewLine]", ")"}]}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+    "This", " ", "multiline", " ", "function", " ", "claculates", " ", 
+     "dayLength", " ", "using", " ", "latitude", " ", "and", " ", "ordinal", 
+     " ", 
+     RowBox[{"date", "."}]}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"dayLengthFunction", "[", 
+     RowBox[{"latitude_", ",", "ordinalDate_"}], "]"}], ":=", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"latitudeRadians", "=", 
+       RowBox[{"latitude", "*", 
+        RowBox[{"Pi", "/", "180"}]}]}], ";", "\[IndentingNewLine]", 
+      "\[IndentingNewLine]", 
+      RowBox[{"dayLength", "=", 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"180", "/", "Pi"}], ")"}], "*", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"2", "/", "15"}], ")"}], "*", 
+          RowBox[{"ArcCos", "[", 
+           RowBox[{
+            RowBox[{"-", 
+             RowBox[{"Tan", "[", "latitudeRadians", "]"}]}], "*", 
+            RowBox[{"Tan", "[", 
+             RowBox[{"solarDeclinationFunction", "[", "ordinalDate", "]"}], 
+             "]"}]}], "]"}]}], ")"}]}]}], ";", "\[IndentingNewLine]", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Return", "[", "dayLength", "]"}], ";"}], "\[IndentingNewLine]",
+      ")"}]}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{
+     "This", " ", "function", " ", "is", " ", "written", " ", "like", " ", 
+      "a", " ", "multiline", " ", "function", " ", "for", " ", "consistency", 
+      " ", "and", " ", 
+      RowBox[{"legibility", ".", " ", "It"}], " ", "uses", " ", "tMin", " ", 
+      "and", " ", "tMax"}], ",", " ", 
+     RowBox[{
+     "the", " ", "number", " ", "of", " ", "hours", " ", "since", " ", 
+      "sunrise", " ", 
+      RowBox[{"(", "hourFromRise", ")"}]}], ",", " ", "latitude", ",", " ", 
+     RowBox[{
+     "and", " ", "the", " ", "ordinal", " ", "date", " ", "to", " ", 
+      "calculate", " ", "a", " ", "temperature", " ", "for", " ", "each", " ",
+       "daylight", " ", 
+      RowBox[{"hour", "."}]}]}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"hourDayTempFunction", "[", 
+     RowBox[{
+     "tMin_", ",", "tMax_", ",", "hourFromRise_", ",", "latitude_", ",", 
+      "ordinalDate_"}], "]"}], ":=", "\[IndentingNewLine]", 
+    RowBox[{"(", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"hourDayTemp", "=", 
+       RowBox[{"tMin", "+", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"tMax", "-", "tMin"}], ")"}], "*", 
+         RowBox[{"Sin", "[", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{"Pi", "*", "hourFromRise"}], ")"}], "/", 
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"dayLengthFunction", "[", 
+              RowBox[{"latitude", ",", "ordinalDate"}], "]"}], "+", "4"}], 
+            ")"}]}], "]"}]}]}]}], ";", "\[IndentingNewLine]", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Return", "[", "hourDayTemp", "]"}], ";"}], 
+     "\[IndentingNewLine]", ")"}]}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{
+     "I", " ", "found", " ", "the", " ", "sunset", " ", "temperature", " ", 
+      "by", " ", "calling", " ", "the", " ", "hourDayTempFunction"}], ",", 
+     " ", 
+     RowBox[{
+     "using", " ", "the", " ", "dayLengthFunction", " ", "as", " ", "an", " ", 
+      RowBox[{"argument", ".", " ", "hourNightTempFunction"}], " ", 
+      "calculates", " ", "a", " ", "temperature", " ", "for", " ", "each", 
+      " ", "nighttime", " ", "hour", " ", "using", " ", "tMin"}], ",", " ", 
+     "tMax", ",", " ", 
+     RowBox[{
+     "the", " ", "number", " ", "of", " ", "hours", " ", "since", " ", 
+      "sunset", " ", 
+      RowBox[{"(", "hourFromSet", ")"}]}], ",", " ", "latitude", ",", " ", 
+     RowBox[{"and", " ", "the", " ", "ordinal", " ", 
+      RowBox[{"date", "."}]}]}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"hourNightTempFunction", "[", 
+     RowBox[{
+     "tMin_", ",", "tMax_", ",", "hourFromSet_", ",", "latitude_", ",", 
+      "ordinalDate_"}], "]"}], ":=", "\[IndentingNewLine]", 
+    RowBox[{"(", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"hourNightTemp", "=", 
+       RowBox[{
+        RowBox[{"hourDayTempFunction", "[", 
+         RowBox[{"tMin", ",", "tMax", ",", 
+          RowBox[{"dayLengthFunction", "[", 
+           RowBox[{"latitude", ",", "ordinalDate"}], "]"}], ",", "latitude", 
+          ",", "ordinalDate"}], "]"}], "-", 
+        RowBox[{
+         RowBox[{"Log", "[", "hourFromSet", "]"}], "*", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"hourDayTempFunction", "[", 
+              RowBox[{"tMin", ",", "tMax", ",", 
+               RowBox[{"dayLengthFunction", "[", 
+                RowBox[{"latitude", ",", "ordinalDate"}], "]"}], ",", 
+               "latitude", ",", "ordinalDate"}], "]"}], "-", "tMin"}], ")"}], 
+           "/", 
+           RowBox[{"Log", "[", 
+            RowBox[{"24", "-", 
+             RowBox[{"dayLengthFunction", "[", 
+              RowBox[{"latitude", ",", "ordinalDate"}], "]"}]}], "]"}]}], 
+          ")"}]}]}]}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"Return", "[", "hourNightTemp", "]"}], ";"}], 
+     "\[IndentingNewLine]", ")"}]}], "\[IndentingNewLine]", "\n", 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{"hourTempFunction", " ", "uses", " ", "tMin"}], ",", " ", "tMax",
+      ",", " ", 
+     RowBox[{
+     "the", " ", "number", " ", "of", " ", "hours", " ", "from", " ", "0000", 
+      " ", 
+      RowBox[{"(", "hour", ")"}]}], ",", " ", "latitude", ",", " ", 
+     RowBox[{
+     "and", " ", "the", " ", "ordinal", " ", "date", " ", "and", " ", 
+      "returns", " ", "the", " ", "temperature", " ", "for", " ", "any", " ", 
+      "hour", " ", "in", " ", "a", " ", "given", " ", 
+      RowBox[{"day", ".", " ", 
+       RowBox[{"I", "'"}]}], "ve", " ", "then", " ", "used", " ", "If", " ", 
+      "statements", " ", "to", " ", "determine", " ", "whether", " ", 
+      "hourTempFunction", " ", "should", " ", "call", " ", "the", " ", 
+      "hourDayTempFunction", " ", "or", " ", "the", " ", 
+      RowBox[{"hourNightTempFunction", ".", " ", "It"}], " ", "was", " ", 
+      "necessary", " ", "to", " ", "consider", " ", "hours", " ", "between", 
+      " ", "sunrise", " ", "and", " ", "sunset", " ", "inclusive", " ", "to", 
+      " ", "be", " ", "daylight", " ", "hours"}], ",", " ", 
+     RowBox[{
+     "because", " ", "of", " ", "the", " ", "way", " ", "the", " ", 
+      "hourNightTempFunction", " ", "and", " ", "the", " ", 
+      "hourDayTempFunction", " ", 
+      RowBox[{"interact", "."}]}]}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"hourTempFunction", "[", 
+     RowBox[{
+     "tMin_", ",", "tMax_", ",", "hour_", ",", "latitude_", ",", 
+      "ordinalDate_"}], "]"}], ":=", "\[IndentingNewLine]", 
+    RowBox[{"(", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"sunriseTime", "=", 
+       RowBox[{"12", "-", 
+        RowBox[{"dayLength", "/", "2"}]}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"sunsetTime", "=", 
+       RowBox[{"12", "+", 
+        RowBox[{"dayLength", "/", "2"}]}]}], ";", "\[IndentingNewLine]", 
+      "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"sunsetTime", "+", "1"}], ")"}], ">", " ", "hour", 
+         "\[GreaterEqual]", "sunriseTime"}], ",", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"hourFromRise", "=", 
+           RowBox[{"hour", "-", "sunriseTime"}]}], ";", 
+          RowBox[{"hourTemp", "=", 
+           RowBox[{"hourDayTempFunction", "[", 
+            RowBox[{
+            "tMin", ",", "tMax", ",", "hourFromRise", ",", "latitude", ",", 
+             "ordinalDate"}], "]"}]}]}], "}"}]}], "]"}], ";", 
+      "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"hour", "<", "sunriseTime"}], ",", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"hourFromSet", "=", 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"24", "-", "sunsetTime"}], ")"}], "+", "hour"}]}], ";", 
+          RowBox[{"hourTemp", "=", 
+           RowBox[{"hourNightTempFunction", "[", 
+            RowBox[{
+            "tMin", ",", "tMax", ",", "hourFromSet", ",", "latitude", ",", 
+             "ordinalDate"}], "]"}]}]}], "}"}]}], "]"}], ";", 
+      "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"hour", "\[GreaterEqual]", " ", 
+         RowBox[{"(", 
+          RowBox[{"sunsetTime", "+", "1"}], ")"}]}], ",", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"hourFromSet", "=", 
+           RowBox[{"hour", "-", "sunsetTime"}]}], ";", 
+          RowBox[{"hourTemp", "=", 
+           RowBox[{"hourNightTempFunction", "[", 
+            RowBox[{
+            "tMin", ",", "tMax", ",", "hourFromSet", ",", "latitude", ",", 
+             "ordinalDate"}], "]"}]}]}], "}"}]}], "]"}], ";", 
+      "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"Return", "[", "hourTemp", "]"}], ";"}], "\[IndentingNewLine]", 
+     ")"}]}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+    "This", " ", "function", " ", "must", " ", "be", " ", "run", " ", 
+     "before", " ", "the", " ", "hourTempFunction", " ", "will", " ", 
+     RowBox[{"work", "."}]}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"hourDayTempFunction", "[", 
+     RowBox[{"0", ",", "20", ",", "5", ",", "44", ",", "120"}], "]"}], ";"}], 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", "\n", 
+   
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{"A", " ", "two"}], "-", 
+     RowBox[{
+     "dimensional", " ", "array", " ", "is", " ", "created", " ", "for", " ", 
+      "hourly", " ", "temperature", " ", "data", " ", "for", " ", "the", " ", 
+      "334", " ", 
+      RowBox[{"dates", ".", " ", "There"}], " ", "are", " ", "8016", " ", 
+      "total", " ", "hours", " ", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"24", " ", "hours", " ", "per", " ", "334", " ", "days"}], 
+        ")"}], "."}]}]}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"temperatureData", "=", 
+     RowBox[{"ConstantArray", "[", 
+      RowBox[{"c", ",", 
+       RowBox[{"{", 
+        RowBox[{"5", ",", 
+         RowBox[{"(", 
+          RowBox[{"totalDays", "*", "24"}], ")"}]}], "}"}]}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", "\n", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{
+     "This", " ", "loop", " ", "fills", " ", "temperatureData", " ", "with", 
+      " ", "day"}], ",", " ", "hour", ",", " ", 
+     RowBox[{"and", " ", "temperature", " ", "using", " ", 
+      RowBox[{"hourTempFunction", ".", " ", "There"}], " ", "are", " ", "24", 
+      " ", "hours", " ", "in", " ", "the", " ", "day"}], ",", " ", 
+     RowBox[{
+     "beginning", " ", "with", " ", "0", " ", "and", " ", "ending", " ", 
+      "with", " ", "23."}]}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"n", "=", "1"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{"For", "[", 
+    RowBox[{
+     RowBox[{"day", "=", "1"}], ",", 
+     RowBox[{"day", "\[LessEqual]", "totalDays"}], ",", 
+     RowBox[{"day", "++"}], ",", 
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{"For", "[", 
+       RowBox[{
+        RowBox[{"hour", "=", "0"}], ",", 
+        RowBox[{"hour", "\[LessEqual]", "23"}], ",", 
+        RowBox[{"hour", "++"}], ",", 
+        RowBox[{"{", "\[IndentingNewLine]", 
+         RowBox[{"(*", "day", "*)"}], "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"temperatureData", "[", 
+            RowBox[{"[", 
+             RowBox[{"1", ",", "n"}], "]"}], "]"}], "=", 
+           RowBox[{"dataFormatted", "[", 
+            RowBox[{"[", 
+             RowBox[{"1", ",", "day"}], "]"}], "]"}]}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"(*", "hour", "*)"}], "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"temperatureData", "[", 
+            RowBox[{"[", 
+             RowBox[{"2", ",", "n"}], "]"}], "]"}], "=", "hour"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"(*", 
+           RowBox[{"hourly", " ", "temperature"}], "*)"}], 
+          "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"temperatureData", "[", 
+            RowBox[{"[", 
+             RowBox[{"3", ",", "n"}], "]"}], "]"}], "=", 
+           RowBox[{"hourTempFunction", "[", 
+            RowBox[{
+             RowBox[{"dataFormatted", "[", 
+              RowBox[{"[", 
+               RowBox[{"2", ",", "day"}], "]"}], "]"}], ",", 
+             RowBox[{"dataFormatted", "[", 
+              RowBox[{"[", 
+               RowBox[{"3", ",", "day"}], "]"}], "]"}], ",", "hour", ",", 
+             RowBox[{"dataRaw", "[", 
+              RowBox[{"[", 
+               RowBox[{"2", ",", "4"}], "]"}], "]"}], ",", 
+             RowBox[{"dataFormatted", "[", 
+              RowBox[{"[", 
+               RowBox[{"1", ",", "day"}], "]"}], "]"}]}], "]"}]}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"n", "++"}], ";"}], "\[IndentingNewLine]", "}"}]}], "]"}], 
+      "\[IndentingNewLine]", "}"}]}], "]"}], 
+   "\[IndentingNewLine]"}]}]], "Input",
+ CellChangeTimes->{{3.63848371300036*^9, 3.638483714051607*^9}, {
+   3.638483902179851*^9, 3.6384840634490347`*^9}, {3.638484142296259*^9, 
+   3.638484180486405*^9}, {3.6384842496849127`*^9, 3.638484268188511*^9}, {
+   3.638484803728756*^9, 3.6384848109495497`*^9}, {3.638484885187483*^9, 
+   3.638485060918927*^9}, {3.638485177275094*^9, 3.638485294785378*^9}, {
+   3.638485462594108*^9, 3.638485471012723*^9}, {3.638485506556491*^9, 
+   3.638485534771832*^9}, {3.638485857725665*^9, 3.638485882243033*^9}, {
+   3.6385784879162188`*^9, 3.638578491459944*^9}, {3.638578530394966*^9, 
+   3.638578570066139*^9}, {3.63865514273097*^9, 3.638655361860997*^9}, {
+   3.63872162152184*^9, 3.6387216271996717`*^9}, {3.6387222782162313`*^9, 
+   3.6387222833430843`*^9}, 3.638722372006768*^9, {3.638722546595462*^9, 
+   3.638722547421802*^9}, {3.638722639396202*^9, 3.6387226419143047`*^9}, {
+   3.638722685349267*^9, 3.6387226873299828`*^9}, {3.638722885238112*^9, 
+   3.6387230179396877`*^9}, {3.6388809837413797`*^9, 3.638880994048739*^9}, {
+   3.638881059022709*^9, 3.6388811621328573`*^9}, {3.63888127593719*^9, 
+   3.6388812852730713`*^9}, {3.6388814911344347`*^9, 
+   3.6388814914679213`*^9}, {3.63890285760017*^9, 3.63890286250012*^9}, {
+   3.638902892861783*^9, 3.638902907401107*^9}, {3.638902944147725*^9, 
+   3.638902948402093*^9}, {3.638903175578514*^9, 3.638903176838962*^9}, {
+   3.6390968779389544`*^9, 3.639096895547676*^9}, {3.639096949731942*^9, 
+   3.6390969517413692`*^9}, 3.63909698573598*^9, 3.639097221321267*^9, {
+   3.639098571378598*^9, 3.6390986042751637`*^9}, {3.639142974464254*^9, 
+   3.639142992009606*^9}, {3.6391431962502203`*^9, 3.639143205295196*^9}, {
+   3.639143270315359*^9, 3.639143293450124*^9}, {3.639143658686801*^9, 
+   3.6391436996787977`*^9}, {3.6393478341562767`*^9, 3.639347843137742*^9}, {
+   3.6393478821197577`*^9, 3.6393478911234207`*^9}, {3.6393486592995443`*^9, 
+   3.63934867902269*^9}, {3.639348721010315*^9, 3.639348727196677*^9}, 
+   3.6394872831755877`*^9, 3.639487355456105*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Chilling Units", "Section",
+ CellChangeTimes->{{3.639096191298176*^9, 3.639096219687299*^9}, {
+   3.639096299466838*^9, 3.639096310599081*^9}, {3.6390968425144653`*^9, 
+   3.639096856617963*^9}, 3.639097235791469*^9, {3.639097267062213*^9, 
+   3.639097277332801*^9}}],
+
+Cell[BoxData[
+ RowBox[{"\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{
+    "This", " ", "function", " ", "calculates", " ", "the", " ", "number", 
+     " ", "of", " ", "chilling", " ", "units", " ", "acquired", " ", "in", 
+     " ", "a", " ", "given", " ", "hour"}], ",", " ", 
+    RowBox[{"using", " ", "the", " ", "hourly", " ", "temperature"}], ",", 
+    " ", 
+    RowBox[{"as", " ", "stored", " ", "in", " ", "temperatureData"}], ",", 
+    " ", 
+    RowBox[{"and", " ", "minChillTemp", " ", "and", " ", 
+     RowBox[{"maxChillTemp", "."}]}]}], "*)"}], "\n", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"chillingUnitsFunction", "[", 
+     RowBox[{"hourlyTemp_", ",", "minChillTemp_", ",", "maxChillTemp_"}], 
+     "]"}], ":=", "\[IndentingNewLine]", 
+    RowBox[{"(", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"hourlyTemp", "\[LessEqual]", "minChillTemp"}], ",", 
+        RowBox[{"chillUnit", "=", "0"}]}], "]"}], ";", "\[IndentingNewLine]", 
+      
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{
+        "minChillTemp", "<", "hourlyTemp", "\[LessEqual]", "maxChillTemp"}], 
+        ",", 
+        RowBox[{"chillUnit", "=", "1"}]}], "]"}], ";", "\[IndentingNewLine]", 
+      
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"hourlyTemp", ">", "maxChillTemp"}], ",", 
+        RowBox[{"chillUnit", "=", "0"}]}], "]"}], ";", "\[IndentingNewLine]", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Return", "[", "chillUnit", "]"}], ";"}], "\[IndentingNewLine]",
+      ")"}]}], "\n", "\n", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{
+     "This", " ", "function", " ", "contains", " ", "a", " ", "loop", " ", 
+      "that", " ", "runs", " ", "through", " ", "each", " ", "hour", " ", 
+      "in", " ", "temperatureData", " ", "and", " ", "uses", " ", 
+      "chillingUnitsFunction", " ", "to", " ", "calculate", " ", "CUs"}], ",",
+      " ", 
+     RowBox[{
+     "storing", " ", "them", " ", "in", " ", "the", " ", "fourth", " ", 
+      "element", " ", "of", " ", "the", " ", "same", " ", 
+      RowBox[{"array", ".", " ", "deltaT"}], " ", "is", " ", "added", " ", 
+      "to", " ", "each", " ", "temperature", " ", "value", " ", "to", " ", 
+      "allow", " ", "for", " ", "multiple", " ", 
+      RowBox[{"replications", "."}]}]}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"FillChill", "[", "deltaT_", "]"}], ":=", 
+    RowBox[{"For", "[", 
+     RowBox[{
+      RowBox[{"b", "=", "1"}], ",", 
+      RowBox[{"b", "\[LessEqual]", 
+       RowBox[{"(", 
+        RowBox[{"totalDays", "*", "24"}], ")"}]}], ",", 
+      RowBox[{"b", "++"}], ",", 
+      RowBox[{"{", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"temperatureData", "[", 
+          RowBox[{"[", 
+           RowBox[{"4", ",", "b"}], "]"}], "]"}], "=", 
+         RowBox[{"chillingUnitsFunction", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"temperatureData", "[", 
+             RowBox[{"[", 
+              RowBox[{"3", ",", "b"}], "]"}], "]"}], "+", "deltaT"}], ",", 
+           "minChillTemp", ",", "maxChillTemp"}], "]"}]}], ";"}], 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", "}"}]}], "]"}]}], "\n", 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{
+     "This", " ", "loop", " ", "uses", " ", "the", " ", "FillChill", " ", 
+      "function", " ", "and", " ", "a", " ", "nested", " ", "For", " ", 
+      "loop", " ", "to", " ", "calculate", " ", "the", " ", "date", " ", "at",
+       " ", "which", " ", "enough", " ", "CUs", " ", "have", " ", 
+      "accumulated"}], ",", " ", 
+     RowBox[{"running", " ", 
+      StyleBox["replications",
+       FontSlant->"Italic"], " ", "times", " ", "with", " ", "temperatures", 
+      " ", "from", " ", "startDT", " ", "to", " ", 
+      RowBox[{"endDT", ".", " ", "It"}], " ", "compiles", " ", "cumulative", 
+      " ", "CUs", " ", "until", " ", "the", " ", "chillRequirement", " ", 
+      "has", " ", "been", " ", "reached"}], ",", " ", 
+     RowBox[{"and", " ", "then", " ", "records", " ", "the", " ", 
+      RowBox[{"date", ".", " ", "sumChill"}], " ", "is", " ", "initially", 
+      " ", "defined", " ", "and", " ", "set", " ", "equal", " ", "to", " ", 
+      "zero"}], ",", " ", 
+     RowBox[{
+     "because", " ", "the", " ", "number", " ", "of", " ", "CUs", " ", 
+      "already", " ", "accumulated", " ", "before", " ", "beginDate", " ", 
+      "is", " ", 
+      RowBox[{
+      "zero", ".", "\[IndentingNewLine]", "\[IndentingNewLine]", "The"}], " ",
+       "allTemperatures", " ", "array", " ", "is", " ", "filled", " ", "with",
+       " ", "each", " ", "temperature", " ", "so", " ", "that", " ", "they", 
+      " ", "can", " ", "be", " ", "used", " ", "as", " ", "x", " ", "values", 
+      " ", "when", " ", "the", " ", "final", " ", "data", " ", "is", " ", 
+      RowBox[{
+      "plotted", ".", "\[IndentingNewLine]", "\[IndentingNewLine]", "A"}], 
+      " ", "counter", " ", "variable", " ", "is", " ", "used", " ", "to", " ",
+       "stand", " ", "for", " ", "the", " ", "number", " ", "of", " ", 
+      "times", " ", "through", " ", "the", " ", "loop"}], ",", " ", 
+     RowBox[{
+     "and", " ", "allows", " ", "me", " ", "to", " ", "point", " ", "to", " ",
+       "the", " ", "right", " ", "date", " ", "in", " ", "the", " ", 
+      "chillingDates", " ", "array"}], ",", " ", 
+     RowBox[{
+     "as", " ", "well", " ", "as", " ", "the", " ", "right", " ", "value", 
+      " ", "in", " ", "the", " ", "allTemperatures", " ", 
+      RowBox[{"array", "."}]}]}], "*)"}], "\n", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"counter", "=", "0"}], ";"}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{"For", "[", 
+    RowBox[{
+     RowBox[{"n", "=", "startDT"}], ",", 
+     RowBox[{"n", "\[LessEqual]", "endDT"}], ",", 
+     RowBox[{"n", "=", 
+      RowBox[{"(", 
+       RowBox[{"n", "+", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"endDT", "-", "startDT"}], ")"}], "/", 
+         RowBox[{"(", 
+          RowBox[{"replications", "-", "1"}], ")"}]}]}], ")"}]}], ",", 
+     RowBox[{"{", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"FillChill", "[", "n", "]"}], ";", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", 
+       RowBox[{"sumChill", "=", "0"}], ";", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", 
+       RowBox[{"counter", "++"}], ";", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", 
+       RowBox[{"For", "[", 
+        RowBox[{
+         RowBox[{"r", "=", "1"}], ",", 
+         RowBox[{"sumChill", "<", "chillRequirement"}], ",", 
+         RowBox[{"r", "++"}], ",", 
+         RowBox[{"{", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"sumChill", "=", 
+            RowBox[{"sumChill", "+", 
+             RowBox[{"temperatureData", "[", 
+              RowBox[{"[", 
+               RowBox[{"4", ",", "r"}], "]"}], "]"}]}]}], ";", 
+           "\[IndentingNewLine]", "\[IndentingNewLine]", 
+           RowBox[{"chillDate", "=", 
+            RowBox[{"temperatureData", "[", 
+             RowBox[{"[", 
+              RowBox[{"1", ",", "r"}], "]"}], "]"}]}], ";", 
+           "\[IndentingNewLine]", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"chillingDates", "[", 
+             RowBox[{"[", "counter", "]"}], "]"}], "=", "chillDate"}], ";"}], 
+          "\[IndentingNewLine]", "\[IndentingNewLine]", "}"}]}], "]"}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"allTemperatures", "[", 
+         RowBox[{"[", "counter", "]"}], "]"}], "=", "n"}], ";"}], 
+      "\[IndentingNewLine]", "\[IndentingNewLine]", "}"}]}], "]"}], "\n", 
+   "\[IndentingNewLine]", "\[IndentingNewLine]"}]}]], "Input",
+ CellChangeTimes->{{3.639097280096176*^9, 3.639097405192696*^9}, {
+   3.63914450566177*^9, 3.639144602234765*^9}, {3.6391446834570913`*^9, 
+   3.639144792117446*^9}, {3.63914484426859*^9, 3.639144845115892*^9}, 
+   3.6391448834248447`*^9, {3.6393295796153307`*^9, 3.639329656310285*^9}, {
+   3.6393299503713083`*^9, 3.639329962842545*^9}, {3.639330002307537*^9, 
+   3.639330034254483*^9}, {3.639330068074459*^9, 3.639330068362308*^9}, {
+   3.6393304413315287`*^9, 3.6393304436090727`*^9}, {3.639330507630703*^9, 
+   3.639330509502614*^9}, {3.6393314158664293`*^9, 3.6393315977106543`*^9}, {
+   3.639331635720154*^9, 3.6393317335282373`*^9}, {3.6393319525418787`*^9, 
+   3.639331973330696*^9}, {3.639332113134614*^9, 3.639332144474506*^9}, {
+   3.639332201162189*^9, 3.639332223539323*^9}, {3.639332266785355*^9, 
+   3.639332285175962*^9}, {3.639332318457035*^9, 3.639332318613887*^9}, {
+   3.639332420392774*^9, 3.639332429666893*^9}, {3.6393324948650627`*^9, 
+   3.63933251794655*^9}, {3.6393325604484158`*^9, 3.639332587365911*^9}, 
+   3.639332623420566*^9, {3.63933269454852*^9, 3.639332760661982*^9}, {
+   3.639332832674571*^9, 3.63933289533504*^9}, {3.639333113773032*^9, 
+   3.639333121692144*^9}, {3.639334662693852*^9, 3.6393346753230124`*^9}, {
+   3.639334729311303*^9, 3.639334752606083*^9}, {3.639334812693684*^9, 
+   3.6393348699886436`*^9}, {3.6393349737356653`*^9, 3.639334973965355*^9}, {
+   3.6393372381073093`*^9, 3.639337330391197*^9}, {3.63934837782672*^9, 
+   3.639348382900503*^9}, {3.639348799023923*^9, 3.639348820711231*^9}, {
+   3.639348877755701*^9, 3.639348911122053*^9}, {3.6393489819343443`*^9, 
+   3.639349068943877*^9}, {3.639349099022892*^9, 3.639349114868394*^9}, 
+   3.639487367368102*^9, {3.7036864157508574`*^9, 3.7036864164091167`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Growing Degrees", "Section",
+ CellChangeTimes->{{3.639096191298176*^9, 3.639096219687299*^9}, {
+   3.639096299466838*^9, 3.639096310599081*^9}, {3.6390968425144653`*^9, 
+   3.639096856617963*^9}, 3.639097235791469*^9, {3.639097267062213*^9, 
+   3.639097277332801*^9}, {3.639144905736595*^9, 3.639144907671775*^9}}],
+
+Cell[BoxData[
+ RowBox[{"\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{
+    "These", " ", "functions", " ", "calculate", " ", "the", " ", "number", 
+     " ", "of", " ", "GDDs", " ", "the", " ", "plant", " ", "or", " ", 
+     "insect", " ", "has", " ", "accumulated", " ", "in", " ", "any", " ", 
+     "given", " ", "day"}], ",", " ", 
+    RowBox[{
+    "using", " ", "the", " ", "base", " ", "temperatures", " ", "and", " ", 
+     "tMin", " ", "and", " ", 
+     RowBox[{"tMax", "."}]}]}], "*)"}], "\n", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"growingDegreePlantFunction", "[", 
+     RowBox[{"tBasePlant_", ",", "tMin_", ",", "tMax_"}], "]"}], ":=", 
+    RowBox[{"gddPlant", "=", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"tMax", "+", "tMin"}], ")"}], "/", "2"}], ")"}], "-", 
+      "tBasePlant"}]}]}], "\[IndentingNewLine]", "\n", 
+   RowBox[{
+    RowBox[{"growingDegreeInsectFunction", "[", 
+     RowBox[{"tBaseInsect_", ",", "tMin_", ",", "tMax_"}], "]"}], ":=", 
+    RowBox[{"gddInsect", "=", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"tMax", "+", "tMin"}], ")"}], "/", "2"}], ")"}], "-", 
+      "tBaseInsect"}]}]}], "\n", "\n", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{"I", "'"}], "m", " ", "creating", " ", "an", " ", "array", " ", 
+     "to", " ", "store", " ", "daily", " ", "plant", " ", "GDDs", " ", "and", 
+     " ", "insect", " ", 
+     RowBox[{"GDDs", ".", " ", "This"}], " ", "array", " ", "will", " ", "be",
+      " ", "used", " ", "for", " ", "temporary", " ", "data", " ", "storage", 
+     " ", "when", " ", "running", " ", "through", " ", "a", " ", "for", " ", 
+     "loop", " ", "in", " ", "the", " ", "next", " ", 
+     RowBox[{"section", "."}]}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"growingDegreeData", "=", 
+     RowBox[{"ConstantArray", "[", 
+      RowBox[{"c", ",", 
+       RowBox[{"{", 
+        RowBox[{"2", ",", "totalDays"}], "}"}]}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", "\n", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{
+     "This", " ", "function", " ", "contains", " ", "a", " ", "loop", " ", 
+      "that", " ", "calculates", " ", "GDDs", " ", "for", " ", "both", " ", 
+      "plants", " ", "and", " ", "insects"}], ",", " ", 
+     RowBox[{
+     "and", " ", "stores", " ", "these", " ", "values", " ", "in", " ", "the",
+       " ", "growingDegreeData", " ", 
+      RowBox[{"array", ".", " ", "tMin"}], " ", "and", " ", "tMax", " ", 
+      "values", " ", "are", " ", "used", " ", "from", " ", "the", " ", 
+      "dataFormatted", " ", 
+      RowBox[{"array", ".", " ", "The"}], " ", "If", " ", "statements", " ", 
+      "convert", " ", "negative", " ", "GDD", " ", "values", " ", "to", " ", 
+      "zero"}], ",", " ", 
+     RowBox[{"so", " ", "that", " ", "GDDs", " ", "cannot", " ", "be", " ", 
+      RowBox[{"lost", ".", "\[IndentingNewLine]", "deltaT"}], " ", "is", " ", 
+      "added", " ", "to", " ", "each", " ", "temperature", " ", "value", " ", 
+      "so", " ", "that", " ", "multiple", " ", "replications", " ", "can", 
+      " ", "be", " ", "carried", " ", 
+      RowBox[{"out", "."}]}]}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"FillGDD", "[", "deltaT_", "]"}], ":=", 
+    RowBox[{"For", "[", 
+     RowBox[{
+      RowBox[{"n", "=", "1"}], ",", 
+      RowBox[{"n", "\[LessEqual]", "totalDays"}], ",", 
+      RowBox[{"n", "++"}], ",", 
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"growingDegreeData", "[", 
+          RowBox[{"[", 
+           RowBox[{"1", ",", "n"}], "]"}], "]"}], "=", 
+         RowBox[{"growingDegreePlantFunction", "[", 
+          RowBox[{"tBasePlant", ",", 
+           RowBox[{
+            RowBox[{"dataFormatted", "[", 
+             RowBox[{"[", 
+              RowBox[{"2", ",", "n"}], "]"}], "]"}], "+", "deltaT"}], ",", 
+           RowBox[{
+            RowBox[{"dataFormatted", "[", 
+             RowBox[{"[", 
+              RowBox[{"3", ",", "n"}], "]"}], "]"}], "+", "deltaT"}]}], 
+          "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"growingDegreeData", "[", 
+            RowBox[{"[", 
+             RowBox[{"1", ",", "n"}], "]"}], "]"}], "<", "0"}], ",", 
+          RowBox[{
+           RowBox[{"growingDegreeData", "[", 
+            RowBox[{"[", 
+             RowBox[{"1", ",", "n"}], "]"}], "]"}], "=", "0"}]}], "]"}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"growingDegreeData", "[", 
+          RowBox[{"[", 
+           RowBox[{"2", ",", "n"}], "]"}], "]"}], "=", 
+         RowBox[{"growingDegreeInsectFunction", "[", 
+          RowBox[{"tBaseInsect", ",", 
+           RowBox[{
+            RowBox[{"dataFormatted", "[", 
+             RowBox[{"[", 
+              RowBox[{"2", ",", "n"}], "]"}], "]"}], "+", "deltaT"}], ",", 
+           RowBox[{
+            RowBox[{"dataFormatted", "[", 
+             RowBox[{"[", 
+              RowBox[{"3", ",", "n"}], "]"}], "]"}], "+", "deltaT"}]}], 
+          "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"growingDegreeData", "[", 
+            RowBox[{"[", 
+             RowBox[{"2", ",", "n"}], "]"}], "]"}], "<", "0"}], ",", 
+          RowBox[{
+           RowBox[{"growingDegreeData", "[", 
+            RowBox[{"[", 
+             RowBox[{"2", ",", "n"}], "]"}], "]"}], "=", "0"}]}], "]"}], 
+        ";"}], "\[IndentingNewLine]", "}"}]}], "]"}]}], 
+   "\[IndentingNewLine]"}]}]], "Input",
+ CellChangeTimes->{{3.6391449142035093`*^9, 3.6391449646374607`*^9}, 
+   3.6391473145748158`*^9, {3.639328222104937*^9, 3.6393282364914227`*^9}, {
+   3.639328286271731*^9, 3.639328313788198*^9}, {3.639328452552279*^9, 
+   3.6393284722609777`*^9}, {3.6393287149360933`*^9, 3.639328717208482*^9}, {
+   3.639328915410149*^9, 3.639328917892681*^9}, {3.639329171295044*^9, 
+   3.63932921758996*^9}, 3.6393349113528023`*^9, 3.639335201922977*^9, 
+   3.639335265802045*^9, {3.6393367120306787`*^9, 3.639336732967691*^9}, {
+   3.6393367713048*^9, 3.639336776449319*^9}, {3.639336809940391*^9, 
+   3.6393368184205513`*^9}, {3.639349144949782*^9, 3.639349148195932*^9}, {
+   3.639349192788371*^9, 3.639349197130249*^9}, 3.63948737270865*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Flowering and emergence dates and mismatch", "Section",
+ CellChangeTimes->{{3.639096191298176*^9, 3.639096219687299*^9}, {
+   3.639096299466838*^9, 3.639096310599081*^9}, {3.6390968425144653`*^9, 
+   3.639096856617963*^9}, 3.639097235791469*^9, {3.639097267062213*^9, 
+   3.639097277332801*^9}, {3.639144905736595*^9, 3.639144907671775*^9}, {
+   3.639146777285617*^9, 3.639146794339822*^9}}],
+
+Cell[BoxData[
+ RowBox[{"\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{
+    "This", " ", "loop", " ", "uses", " ", "the", " ", "FillGDD", " ", 
+     "function", " ", "to", " ", "calculate", " ", "GDD", " ", "accumulation",
+      " ", "over", " ", "replications", " ", 
+     RowBox[{"(", "variable", ")"}], " ", "replications"}], ",", " ", 
+    RowBox[{"using", " ", "temperatures", " ", "startDT", " ", "through", " ", 
+     RowBox[{"endDT", ".", " ", "Flowering"}], " ", "and", " ", "emergence", 
+     " ", "take", " ", "place", " ", "when", " ", "the", " ", "plant", " ", 
+     "or", " ", "insect", " ", "has", " ", "accumulated", " ", "sufficient", 
+     " ", 
+     RowBox[{"GDDs", ".", " ", "The"}], " ", "loop", " ", "stops", " ", 
+     "when", " ", "the", " ", "sum", " ", "GDDs", " ", "reach", " ", "the", 
+     " ", "target", " ", "GDD", " ", "requirement"}], ",", " ", 
+    RowBox[{
+    "and", " ", "dates", " ", "are", " ", "foudn", " ", "by", " ", 
+     "referring", " ", "to", " ", "the", " ", "first", " ", "element", " ", 
+     "of", " ", "the", " ", 
+     RowBox[{"dataFormattedArray", ".", " ", "The"}], " ", "loop", " ", 
+     "then", " ", "stores", " ", "flowering", " ", "dates", " ", "and", " ", 
+     "emergence", " ", "dates", " ", "in", " ", "floweringDates", " ", "and", 
+     " ", "emergenceDates", " ", "for", " ", "each", " ", 
+     RowBox[{"replication", ".", "\[IndentingNewLine]", "sumGDDP"}], " ", 
+     "and", " ", "sumGDDI", " ", "are", " ", "defined", " ", "and", " ", 
+     "set", " ", "to", " ", "zero", " ", "at", " ", "the", " ", "beginning", 
+     " ", "of", " ", "each", " ", "trip", " ", "through", " ", "the", " ", 
+     RowBox[{
+     "loop", ".", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      "startGDDPlant"}], " ", "is", " ", "defined", " ", "so", " ", "that", 
+     " ", "plants", " ", 
+     RowBox[{"don", "'"}], "t", " ", "begin", " ", "accumulating", " ", 
+     "GDDs", " ", "until", " ", "vernalization", " ", "has", " ", "occurred", 
+     " ", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{
+       "until", " ", "the", " ", "chill", " ", "date", " ", "has", " ", 
+        "passed"}], ")"}], ".", " ", "Chill"}], " ", "dates", " ", "from", 
+     " ", "the", " ", "chillingDates", " ", "array", " ", "are", " ", 
+     "converted", " ", "into", " ", "startGDDPlant", " ", "dates"}], ",", " ", 
+    RowBox[{
+    "so", " ", "that", " ", "they", " ", "refer", " ", "to", " ", "the", " ", 
+     "corresponding", " ", "number", " ", "in", " ", "the", " ", "array", " ",
+      "instead", " ", "of", " ", "existing", " ", "as", " ", "ordinal", " ", 
+     RowBox[{
+     "dates", ".", "\[IndentingNewLine]", "\[IndentingNewLine]", "Insects"}], 
+     " ", "begin", " ", "accumulating", " ", "GDDs", " ", "on", " ", 
+     "ordinal", " ", "date", " ", "1"}], ",", " ", 
+    RowBox[{"which", " ", "is", " ", "converted", " ", "into", " ", 
+     RowBox[{"startGDDInsect", ".", " ", "startGDDInsect"}], " ", "refers", 
+     " ", "to", " ", "the", " ", "number", " ", "in", " ", "the", " ", 
+     "array"}], ",", " ", 
+    RowBox[{"rather", " ", "than", " ", "the", " ", "ordinal", " ", 
+     RowBox[{"date", "."}]}]}], "*)"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"counter", "=", "0"}], ";"}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{"For", "[", 
+    RowBox[{
+     RowBox[{"d", "=", "startDT"}], ",", 
+     RowBox[{"d", "\[LessEqual]", "endDT"}], ",", 
+     RowBox[{"d", "=", 
+      RowBox[{"(", 
+       RowBox[{"d", "+", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"endDT", "-", "startDT"}], ")"}], "/", 
+         RowBox[{"(", 
+          RowBox[{"replications", "-", "1"}], ")"}]}]}], ")"}]}], ",", 
+     RowBox[{"{", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"FillGDD", "[", "d", "]"}], ";", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", 
+       RowBox[{"counter", "++"}], ";", "\[IndentingNewLine]", 
+       RowBox[{"sumGDDP", "=", "0"}], ";", "\[IndentingNewLine]", 
+       RowBox[{"sumGDDI", "=", "0"}], ";", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", 
+       RowBox[{"startGDDPlant", "=", 
+        RowBox[{
+         RowBox[{"chillingDates", "[", 
+          RowBox[{"[", "counter", "]"}], "]"}], "-", "beginDate"}]}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"chillingDates", "[", 
+           RowBox[{"[", "counter", "]"}], "]"}], "<", "beginDate"}], ",", 
+         RowBox[{"startGDDPlant", "=", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{"365", "+", 
+             RowBox[{"chillingDates", "[", 
+              RowBox[{"[", "counter", "]"}], "]"}]}], ")"}], "-", 
+           "beginDate"}]}]}], "]"}], ";", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", 
+       RowBox[{"For", "[", 
+        RowBox[{
+         RowBox[{"k", "=", "startGDDPlant"}], ",", 
+         RowBox[{"sumGDDP", "<", "targetGDDPlant"}], ",", 
+         RowBox[{"k", "++"}], ",", 
+         RowBox[{"{", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"sumGDDP", "=", 
+            RowBox[{"sumGDDP", "+", 
+             RowBox[{"growingDegreeData", "[", 
+              RowBox[{"[", 
+               RowBox[{"1", ",", "k"}], "]"}], "]"}]}]}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"floweringDate", "=", 
+            RowBox[{"dataFormatted", "[", 
+             RowBox[{"[", 
+              RowBox[{"1", ",", "k"}], "]"}], "]"}]}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"floweringDates", "[", 
+             RowBox[{"[", "counter", "]"}], "]"}], "=", "floweringDate"}], 
+           ";"}], "\[IndentingNewLine]", "\[IndentingNewLine]", "}"}]}], 
+        "]"}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", 
+       RowBox[{"startGDDInsect", "=", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"365", "+", "1"}], ")"}], "-", "beginDate"}]}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"For", "[", 
+        RowBox[{
+         RowBox[{"g", "=", "startGDDInsect"}], ",", 
+         RowBox[{"sumGDDI", "<", "targetGDDInsect"}], ",", 
+         RowBox[{"g", "++"}], ",", 
+         RowBox[{"{", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"sumGDDI", "=", 
+            RowBox[{"sumGDDI", "+", 
+             RowBox[{"growingDegreeData", "[", 
+              RowBox[{"[", 
+               RowBox[{"2", ",", "g"}], "]"}], "]"}]}]}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"emergenceDate", "=", 
+            RowBox[{"dataFormatted", "[", 
+             RowBox[{"[", 
+              RowBox[{"1", ",", "g"}], "]"}], "]"}]}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"emergenceDates", "[", 
+             RowBox[{"[", "counter", "]"}], "]"}], "=", "emergenceDate"}], 
+           ";"}], "\[IndentingNewLine]", "\[IndentingNewLine]", "}"}]}], 
+        "]"}]}], "\[IndentingNewLine]", "}"}]}], "]"}], 
+   "\[IndentingNewLine]"}]}]], "Input",
+ CellChangeTimes->{{3.6391466096026583`*^9, 3.639146759925968*^9}, {
+   3.63914730482325*^9, 3.6391473067277327`*^9}, 3.639330216460453*^9, {
+   3.639335204193017*^9, 3.639335208742854*^9}, {3.639335250533889*^9, 
+   3.639335273464799*^9}, {3.639335465504468*^9, 3.6393354755242863`*^9}, {
+   3.639335513308206*^9, 3.639335593451914*^9}, {3.639335643302177*^9, 
+   3.639335747658573*^9}, {3.639335783992311*^9, 3.639335798712563*^9}, {
+   3.639335972765399*^9, 3.639335996562189*^9}, 3.6393360504078627`*^9, {
+   3.639336178432542*^9, 3.639336223357622*^9}, {3.639336332192884*^9, 
+   3.639336335384201*^9}, {3.639336365750301*^9, 3.639336638245225*^9}, {
+   3.639349225338941*^9, 3.6393492336664333`*^9}, {3.639349281029066*^9, 
+   3.639349460520585*^9}, {3.639349568045926*^9, 3.639349596734068*^9}, 
+   3.639349994098153*^9, {3.639487376941228*^9, 3.639487383043882*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Results: Flowering and emergence dates and mismatch", "Section",
+ CellChangeTimes->{{3.639096191298176*^9, 3.639096219687299*^9}, {
+   3.639096299466838*^9, 3.639096310599081*^9}, {3.6390968425144653`*^9, 
+   3.639096856617963*^9}, 3.639097235791469*^9, {3.639097267062213*^9, 
+   3.639097277332801*^9}, {3.639144905736595*^9, 3.639144907671775*^9}, {
+   3.639146777285617*^9, 3.639146794339822*^9}, {3.639343702502125*^9, 
+   3.639343703534848*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{"Finally", ",", " ", 
+    RowBox[{
+    "mismatch", " ", "is", " ", "calculated", " ", "by", " ", "subtracting", 
+     " ", "the", " ", "flowering", " ", "date", " ", "from", " ", "the", " ", 
+     "emergence", " ", "date", " ", "in", " ", "the", " ", "following", " ", 
+     "for", " ", 
+     RowBox[{"loop", ".", " ", "Mismatch"}], " ", "values", " ", "are", " ", 
+     "stored", " ", "in", " ", 
+     RowBox[{"mismatchArray", "."}]}]}], "*)"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"For", "[", 
+    RowBox[{
+     RowBox[{"n", "=", "1"}], ",", 
+     RowBox[{"n", "\[LessEqual]", "replications"}], ",", 
+     RowBox[{"n", "++"}], ",", 
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"mismatchArray", "[", 
+         RowBox[{"[", "n", "]"}], "]"}], "=", 
+        RowBox[{
+         RowBox[{"floweringDates", "[", 
+          RowBox[{"[", "n", "]"}], "]"}], "-", 
+         RowBox[{"emergenceDates", "[", 
+          RowBox[{"[", "n", "]"}], "]"}]}]}], ";"}], "\[IndentingNewLine]", 
+      "}"}]}], "]"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{"Here", ",", " ", 
+     RowBox[{
+      RowBox[{"I", "'"}], "m", " ", "creating", " ", "four", " ", "sets", " ",
+       "of", " ", "data"}], ",", " ", 
+     RowBox[{
+     "featuring", " ", "deltaT", " ", "as", " ", "the", " ", "x", " ", 
+      "variable", " ", "and", " ", "mismatch", " ", "values"}], ",", " ", 
+     RowBox[{"flowering", " ", "dates"}], ",", " ", 
+     RowBox[{"emergence", " ", "dates"}], ",", " ", 
+     RowBox[{"and", " ", "chill", " ", "dates", " ", "as", " ", "y", " ", 
+      RowBox[{"variables", "."}]}]}], "*)"}], "\n", 
+   RowBox[{
+    RowBox[{"mismatchData", "=", 
+     RowBox[{"Transpose", "[", 
+      RowBox[{"{", 
+       RowBox[{"allTemperatures", ",", "mismatchArray"}], "}"}], "]"}]}], 
+    ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"floweringData", "=", 
+     RowBox[{"Transpose", "[", 
+      RowBox[{"{", 
+       RowBox[{"allTemperatures", ",", "floweringDates"}], "}"}], "]"}]}], 
+    ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"emergenceData", "=", 
+     RowBox[{"Transpose", "[", 
+      RowBox[{"{", 
+       RowBox[{"allTemperatures", ",", "emergenceDates"}], "}"}], "]"}]}], 
+    ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"chillData", "=", 
+     RowBox[{"Transpose", "[", 
+      RowBox[{"{", 
+       RowBox[{"allTemperatures", ",", "chillingDates"}], "}"}], "]"}]}], 
+    ";"}], "\[IndentingNewLine]", "\n", "\n", 
+   RowBox[{"(*", 
+    RowBox[{"Finally", ",", " ", 
+     RowBox[{
+      RowBox[{"I", "'"}], "m", " ", "creating", " ", "four", " ", "plots", 
+      " ", "that", " ", "show", " ", "how", " ", "mismatch"}], ",", " ", 
+     RowBox[{"flowering", " ", "date"}], ",", " ", 
+     RowBox[{"insect", " ", "emergence"}], ",", " ", 
+     RowBox[{
+     "and", " ", "chill", " ", "date", " ", "are", " ", "affected", " ", "by",
+       " ", "temperature", " ", 
+      RowBox[{"increases", "."}]}]}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{"ListPlot", "[", 
+    RowBox[{"mismatchData", ",", 
+     RowBox[{
+     "PlotLabel", "\[Rule]", "\"\<Mismatch Advancement with Warming\>\""}], 
+     ",", 
+     RowBox[{"LabelStyle", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"FontFamily", "\[Rule]", "\"\<Arial\>\""}], ",", 
+        RowBox[{"GrayLevel", "[", "0", "]"}]}], "}"}]}], ",", 
+     RowBox[{"Joined", "\[Rule]", "True"}], ",", 
+     RowBox[{"Frame", "\[Rule]", "True"}], ",", 
+     RowBox[{"BaseStyle", "\[Rule]", "17"}], ",", 
+     RowBox[{"FrameLabel", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{
+       "\"\<Temperature increase (\[Degree]C)\>\"", ",", 
+        "\"\<Mismatch (days)\>\""}], "}"}]}]}], "]"}], "\n", "\n", 
+   RowBox[{"ListPlot", "[", 
+    RowBox[{"floweringData", ",", 
+     RowBox[{
+     "PlotLabel", "\[Rule]", "\"\<Effect of Warming on Plant Phenology\>\""}],
+      ",", 
+     RowBox[{"LabelStyle", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"FontFamily", "\[Rule]", "\"\<Arial\>\""}], ",", 
+        RowBox[{"GrayLevel", "[", "0", "]"}]}], "}"}]}], ",", 
+     RowBox[{"Joined", "\[Rule]", "True"}], ",", 
+     RowBox[{"Frame", "\[Rule]", "True"}], ",", 
+     RowBox[{"BaseStyle", "\[Rule]", "17"}], ",", 
+     RowBox[{"FrameLabel", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{
+       "\"\<Temperature increase (\[Degree]C)\>\"", ",", 
+        "\"\<Flowring Date (Ordinal)\>\""}], "}"}]}]}], "]"}], "\n", "\n", 
+   RowBox[{"ListPlot", "[", 
+    RowBox[{"emergenceData", ",", 
+     RowBox[{
+     "PlotLabel", "\[Rule]", 
+      "\"\<Effect of Warming on Insect Phenology\>\""}], ",", 
+     RowBox[{"LabelStyle", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"FontFamily", "\[Rule]", "\"\<Arial\>\""}], ",", 
+        RowBox[{"GrayLevel", "[", "0", "]"}]}], "}"}]}], ",", 
+     RowBox[{"Joined", "\[Rule]", "True"}], ",", 
+     RowBox[{"Frame", "\[Rule]", "True"}], ",", 
+     RowBox[{"BaseStyle", "\[Rule]", "17"}], ",", 
+     RowBox[{"FrameLabel", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{
+       "\"\<Temperature increase (\[Degree]C)\>\"", ",", 
+        "\"\<Emergence Date (Ordinal)\>\""}], "}"}]}]}], "]"}], "\n", "\n", 
+   RowBox[{"ListPlot", "[", 
+    RowBox[{"chillData", ",", 
+     RowBox[{
+     "PlotLabel", "\[Rule]", "\"\<Effect of Warming on Vernalization\>\""}], 
+     ",", 
+     RowBox[{"LabelStyle", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"FontFamily", "\[Rule]", "\"\<Arial\>\""}], ",", 
+        RowBox[{"GrayLevel", "[", "0", "]"}]}], "}"}]}], ",", 
+     RowBox[{"Joined", "\[Rule]", "True"}], ",", 
+     RowBox[{"Frame", "\[Rule]", "True"}], ",", 
+     RowBox[{"BaseStyle", "\[Rule]", "17"}], ",", 
+     RowBox[{"FrameLabel", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{
+       "\"\<Temperature increase (\[Degree]C)\>\"", ",", 
+        "\"\<Chill Date (ordinal)\>\""}], "}"}]}]}], "]"}], "\n"}]}]], "Input",\
+
+ CellChangeTimes->{{3.639336841785982*^9, 3.639336887661574*^9}, {
+  3.639347522706058*^9, 3.6393475257244453`*^9}, {3.6393481958667707`*^9, 
+  3.6393483538262043`*^9}, {3.639349609573271*^9, 3.6393496611749353`*^9}, {
+  3.6394047146140347`*^9, 3.639404860263764*^9}, {3.639444705632485*^9, 
+  3.639444755928295*^9}, {3.639445085489594*^9, 3.639445090509037*^9}, {
+  3.639445184768799*^9, 3.639445185623663*^9}, {3.639445227571357*^9, 
+  3.639445343809395*^9}, {3.6394453771506557`*^9, 3.639445408165925*^9}, {
+  3.639445612099105*^9, 3.6394456188711452`*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[{{}, {{}, {}, 
+    {RGBColor[0.368417, 0.506779, 0.709798], PointSize[0.011000000000000001`],
+      AbsoluteThickness[1.6], LineBox[CompressedData["
+1:eJxdkM0KQVEQx4/vb66PhYUFkuw9gPMMHkGx9Ty8iUdQrKzslFLKgkhE4t7/
+zP/mTN2m3z0zvzlzWqPpcBw1xvR/n5/dmM/8WAxAdQteCjdsP4gNGedb1iPv
+yKjfC6ftJIiDsCf9R/J65ceJjHx26i/0wX8VNtJ/I2PenfXIDzJ8T/rhe3E/
++N7cB76Ps6+R3JR6ZX2/iHBP+qPCXZkXIyPHyfDF2Q9fgufwJYXb4kuR//fW
++4UMX4YMX9bq/vDluA9yXnJNfCHDV7D6nvAVeQ5fiax1yqj3+B9+z+kvO/OU
+9X4VMnwV1sOnrO9VJcMX8v89O/YLLmepuw==
+      "]]}}, {}, {}, {{}, {}}},
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->{True, True},
+  AxesLabel->{None, None},
+  AxesOrigin->{0, 0},
+  BaseStyle->17,
+  DisplayFunction->Identity,
+  Frame->{{True, True}, {True, True}},
+  FrameLabel->{{
+     FormBox["\"Mismatch (days)\"", TraditionalForm], None}, {
+     FormBox["\"Temperature increase (\[Degree]C)\"", TraditionalForm], None}},
+  FrameTicks->{{Automatic, Automatic}, {Automatic, Automatic}},
+  GridLines->{None, None},
+  GridLinesStyle->Directive[
+    GrayLevel[0.5, 0.4]],
+  ImagePadding->All,
+  ImageSize->{495.44140625, Automatic},
+  LabelStyle->{FontFamily -> "Arial", 
+    GrayLevel[0]},
+  Method->{"CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+        (Part[{{Identity, Identity}, {Identity, Identity}}, 1, 2][#]& )[
+         Part[#, 1]], 
+        (Part[{{Identity, Identity}, {Identity, Identity}}, 2, 2][#]& )[
+         Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+        (Part[{{Identity, Identity}, {Identity, Identity}}, 1, 2][#]& )[
+         Part[#, 1]], 
+        (Part[{{Identity, Identity}, {Identity, Identity}}, 2, 2][#]& )[
+         Part[#, 2]]}& )}},
+  PlotLabel->FormBox["\"Mismatch Advancement with Warming\"", TraditionalForm],
+  PlotRange->{{0, 5.}, {0, 12.}},
+  PlotRangeClipping->True,
+  PlotRangePadding->{{
+     Scaled[0.02], 
+     Scaled[0.02]}, {
+     Scaled[0.02], 
+     Scaled[0.05]}},
+  Ticks->{Automatic, Automatic}]], "Output",
+ CellChangeTimes->{
+  3.6393482190181227`*^9, {3.6393483393062363`*^9, 3.63934835455308*^9}, 
+   3.6393486452627277`*^9, {3.639349800566906*^9, 3.6393498483912086`*^9}, {
+   3.63934987968637*^9, 3.6393498938077097`*^9}, 3.639349943015679*^9, 
+   3.639350178329338*^9, {3.6394047094870787`*^9, 3.639404734326133*^9}, {
+   3.639404764700663*^9, 3.63940490425828*^9}, {3.6394153915823507`*^9, 
+   3.6394154193430862`*^9}, 3.639415537071063*^9, {3.639415668914583*^9, 
+   3.6394156984694843`*^9}, 3.639415736151849*^9, 3.639415789116287*^9, {
+   3.639415832413805*^9, 3.639415857209022*^9}, {3.6394159411527987`*^9, 
+   3.639416003390869*^9}, 3.639416044564921*^9, {3.6394161669483747`*^9, 
+   3.639416329786791*^9}, 3.63944427276678*^9, {3.639444710738038*^9, 
+   3.639444721435512*^9}, 3.639444777055715*^9, 3.639445091118712*^9, 
+   3.639445142129051*^9, 3.6394452932533493`*^9, 3.639445344607223*^9, 
+   3.639445410056614*^9, {3.639445446504719*^9, 3.639445463516061*^9}, 
+   3.639445620012721*^9, 3.639532261335127*^9, 3.639534549377302*^9, {
+   3.697072596890167*^9, 3.6970726324801807`*^9}, 3.703679304646058*^9}],
+
+Cell[BoxData[
+ GraphicsBox[{{}, {{}, {}, 
+    {RGBColor[0.368417, 0.506779, 0.709798], PointSize[0.011000000000000001`],
+      AbsoluteThickness[1.6], LineBox[CompressedData["
+1:eJxVjU1qwlAURl9tq7Wt/26ga3ABvhVo8jQxiT8DwU67hWxDd9KZ00I76qgz
+QRAEB4pSLJVS4z0meCFcTu73nfc0fDGjlFKqdvyifTkDPRlH81q/5DfhaV/X
+TvMpHPa4f5Hvadkz8l3yczjQz6dZ0A/oL4V1oD/eo1nhC/Ct6fvkN+R9/Fvy
+Pv0deY/3vnnPw7en7+H7oe/h+6XfwXcg38H3x93Fp9jnPKxd/FfcXfop4dDh
+vWvyDrkbtoMPnrbx3XJv40vTb+HLcG+x7+gbfHBo8GXpG3z39Ay+B/I2/x/J
+2/hgZePL8Z6FLx+z+Ar4LHpFfOc8rCz8CUu/RL/JewlLrsxu4oPDBr7kLr5K
+fBcfrBrsasz/KS7Gbw==
+      "]]}}, {}, {}, {{}, {}}},
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->{True, True},
+  AxesLabel->{None, None},
+  AxesOrigin->{0, 0},
+  BaseStyle->17,
+  DisplayFunction->Identity,
+  Frame->{{True, True}, {True, True}},
+  FrameLabel->{{
+     FormBox["\"Flowring Date (Ordinal)\"", TraditionalForm], None}, {
+     FormBox["\"Temperature increase (\[Degree]C)\"", TraditionalForm], None}},
+  FrameTicks->{{Automatic, Automatic}, {Automatic, Automatic}},
+  GridLines->{None, None},
+  GridLinesStyle->Directive[
+    GrayLevel[0.5, 0.4]],
+  ImagePadding->All,
+  ImageSize->{495.44140625, Automatic},
+  LabelStyle->{FontFamily -> "Arial", 
+    GrayLevel[0]},
+  Method->{"CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+        (Part[{{Identity, Identity}, {Identity, Identity}}, 1, 2][#]& )[
+         Part[#, 1]], 
+        (Part[{{Identity, Identity}, {Identity, Identity}}, 2, 2][#]& )[
+         Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+        (Part[{{Identity, Identity}, {Identity, Identity}}, 1, 2][#]& )[
+         Part[#, 1]], 
+        (Part[{{Identity, Identity}, {Identity, Identity}}, 2, 2][#]& )[
+         Part[#, 2]]}& )}},
+  PlotLabel->FormBox[
+   "\"Effect of Warming on Plant Phenology\"", TraditionalForm],
+  PlotRange->{{0, 5.}, {0, 120.}},
+  PlotRangeClipping->True,
+  PlotRangePadding->{{
+     Scaled[0.02], 
+     Scaled[0.02]}, {
+     Scaled[0.02], 
+     Scaled[0.05]}},
+  Ticks->{Automatic, Automatic}]], "Output",
+ CellChangeTimes->{
+  3.6393482190181227`*^9, {3.6393483393062363`*^9, 3.63934835455308*^9}, 
+   3.6393486452627277`*^9, {3.639349800566906*^9, 3.6393498483912086`*^9}, {
+   3.63934987968637*^9, 3.6393498938077097`*^9}, 3.639349943015679*^9, 
+   3.639350178329338*^9, {3.6394047094870787`*^9, 3.639404734326133*^9}, {
+   3.639404764700663*^9, 3.63940490425828*^9}, {3.6394153915823507`*^9, 
+   3.6394154193430862`*^9}, 3.639415537071063*^9, {3.639415668914583*^9, 
+   3.6394156984694843`*^9}, 3.639415736151849*^9, 3.639415789116287*^9, {
+   3.639415832413805*^9, 3.639415857209022*^9}, {3.6394159411527987`*^9, 
+   3.639416003390869*^9}, 3.639416044564921*^9, {3.6394161669483747`*^9, 
+   3.639416329786791*^9}, 3.63944427276678*^9, {3.639444710738038*^9, 
+   3.639444721435512*^9}, 3.639444777055715*^9, 3.639445091118712*^9, 
+   3.639445142129051*^9, 3.6394452932533493`*^9, 3.639445344607223*^9, 
+   3.639445410056614*^9, {3.639445446504719*^9, 3.639445463516061*^9}, 
+   3.639445620012721*^9, 3.639532261335127*^9, 3.639534549377302*^9, {
+   3.697072596890167*^9, 3.6970726324801807`*^9}, 3.703679304671735*^9}],
+
+Cell[BoxData[
+ GraphicsBox[{{}, {{}, {}, 
+    {RGBColor[0.368417, 0.506779, 0.709798], PointSize[0.011000000000000001`],
+      AbsoluteThickness[1.6], LineBox[CompressedData["
+1:eJxVjc9KAlEUh2+aZpZa1gv0DD5Ad6v4Z2ZqnD+IiyC3vsJ9DXuTdrMNcuXK
+nRAEQYvCCCMJmzmfVzxwOXz3/M53ru7G3n1OKdX4f2nfr6F+mKT1eJ2hGcBP
+wmqgG1nNhJOY+Zx8rCW3ENYx+Rf2Yz3K6pV8xP4b+UhPn9N6Jx/h++BeSP6T
+/RD/0rLsf+ELuffNfoBvRT7A98O9AN8v3Me3Zt/H94ffx6foPnk4ucV/wPyG
+/Rxzj3t5YeORO5SuPXxw4uIrMHfxFdlz8R2Rd/gvWRYfbBx8x/gcfGXL4jvB
+s/WdWhYfbHr4KpbFVyXfw1dj3uX/jN4lv2Pxw6bD/jnzDvdg0+a/Tm/j27H4
+YNPCd8G8hQ82Tf4v6U29AQtmxgs=
+      "]]}}, {}, {}, {{}, {}}},
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->{True, True},
+  AxesLabel->{None, None},
+  AxesOrigin->{0, 0},
+  BaseStyle->17,
+  DisplayFunction->Identity,
+  Frame->{{True, True}, {True, True}},
+  FrameLabel->{{
+     FormBox["\"Emergence Date (Ordinal)\"", TraditionalForm], None}, {
+     FormBox["\"Temperature increase (\[Degree]C)\"", TraditionalForm], None}},
+  FrameTicks->{{Automatic, Automatic}, {Automatic, Automatic}},
+  GridLines->{None, None},
+  GridLinesStyle->Directive[
+    GrayLevel[0.5, 0.4]],
+  ImagePadding->All,
+  ImageSize->{495.44140625, Automatic},
+  LabelStyle->{FontFamily -> "Arial", 
+    GrayLevel[0]},
+  Method->{"CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+        (Part[{{Identity, Identity}, {Identity, Identity}}, 1, 2][#]& )[
+         Part[#, 1]], 
+        (Part[{{Identity, Identity}, {Identity, Identity}}, 2, 2][#]& )[
+         Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+        (Part[{{Identity, Identity}, {Identity, Identity}}, 1, 2][#]& )[
+         Part[#, 1]], 
+        (Part[{{Identity, Identity}, {Identity, Identity}}, 2, 2][#]& )[
+         Part[#, 2]]}& )}},
+  PlotLabel->FormBox[
+   "\"Effect of Warming on Insect Phenology\"", TraditionalForm],
+  PlotRange->{{0, 5.}, {0, 120.}},
+  PlotRangeClipping->True,
+  PlotRangePadding->{{
+     Scaled[0.02], 
+     Scaled[0.02]}, {
+     Scaled[0.02], 
+     Scaled[0.05]}},
+  Ticks->{Automatic, Automatic}]], "Output",
+ CellChangeTimes->{
+  3.6393482190181227`*^9, {3.6393483393062363`*^9, 3.63934835455308*^9}, 
+   3.6393486452627277`*^9, {3.639349800566906*^9, 3.6393498483912086`*^9}, {
+   3.63934987968637*^9, 3.6393498938077097`*^9}, 3.639349943015679*^9, 
+   3.639350178329338*^9, {3.6394047094870787`*^9, 3.639404734326133*^9}, {
+   3.639404764700663*^9, 3.63940490425828*^9}, {3.6394153915823507`*^9, 
+   3.6394154193430862`*^9}, 3.639415537071063*^9, {3.639415668914583*^9, 
+   3.6394156984694843`*^9}, 3.639415736151849*^9, 3.639415789116287*^9, {
+   3.639415832413805*^9, 3.639415857209022*^9}, {3.6394159411527987`*^9, 
+   3.639416003390869*^9}, 3.639416044564921*^9, {3.6394161669483747`*^9, 
+   3.639416329786791*^9}, 3.63944427276678*^9, {3.639444710738038*^9, 
+   3.639444721435512*^9}, 3.639444777055715*^9, 3.639445091118712*^9, 
+   3.639445142129051*^9, 3.6394452932533493`*^9, 3.639445344607223*^9, 
+   3.639445410056614*^9, {3.639445446504719*^9, 3.639445463516061*^9}, 
+   3.639445620012721*^9, 3.639532261335127*^9, 3.639534549377302*^9, {
+   3.697072596890167*^9, 3.6970726324801807`*^9}, 3.7036793046889668`*^9}],
+
+Cell[BoxData[
+ GraphicsBox[{{}, {{}, {}, 
+    {RGBColor[0.368417, 0.506779, 0.709798], PointSize[0.011000000000000001`],
+      AbsoluteThickness[1.6], LineBox[CompressedData["
+1:eJxd0D1KA0EYh/E1avyIxvHjAHoDIQdwjhA8gQS01WKTc6TVKkdIa2crKASs
+7AKCIFhEDMGgSNx93vc/uC8sw2935hnYo87l6Xkty7LW31Os/ybk8ea6mNuT
+0tF9L7fKecJt//6Mz/JIaCyz/wVf5fGinFeZ82+4n8fHh2Le8cB7E5n9H3jo
+/U+Z81M88vtmMr0vPPbeXKb3jSfe+5Hp/cr251hD1/Yn01/Ch107X5O5b1km
+t8J67L1keqsyvTqO3lvDbe+ts/a9l0xvAw+8tynTa+Ch97ZkeuY7723L9Joy
+vR2ZXqjsT6YfKud3K/eZR97bk+kl0zNnPevty/TMoWfvD+QFegPWXA==
+      
+      "]]}}, {}, {}, {{}, {}}},
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->{True, True},
+  AxesLabel->{None, None},
+  AxesOrigin->{0, 319.40000000000003`},
+  BaseStyle->17,
+  DisplayFunction->Identity,
+  Frame->{{True, True}, {True, True}},
+  FrameLabel->{{
+     FormBox["\"Chill Date (ordinal)\"", TraditionalForm], None}, {
+     FormBox["\"Temperature increase (\[Degree]C)\"", TraditionalForm], None}},
+  FrameTicks->{{Automatic, Automatic}, {Automatic, Automatic}},
+  GridLines->{None, None},
+  GridLinesStyle->Directive[
+    GrayLevel[0.5, 0.4]],
+  ImagePadding->All,
+  ImageSize->{495.44140625, Automatic},
+  LabelStyle->{FontFamily -> "Arial", 
+    GrayLevel[0]},
+  Method->{"CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+        (Part[{{Identity, Identity}, {Identity, Identity}}, 1, 2][#]& )[
+         Part[#, 1]], 
+        (Part[{{Identity, Identity}, {Identity, Identity}}, 2, 2][#]& )[
+         Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+        (Part[{{Identity, Identity}, {Identity, Identity}}, 1, 2][#]& )[
+         Part[#, 1]], 
+        (Part[{{Identity, Identity}, {Identity, Identity}}, 2, 2][#]& )[
+         Part[#, 2]]}& )}},
+  PlotLabel->FormBox[
+   "\"Effect of Warming on Vernalization\"", TraditionalForm],
+  PlotRange->{{0, 5.}, {321., 353.}},
+  PlotRangeClipping->True,
+  PlotRangePadding->{{
+     Scaled[0.02], 
+     Scaled[0.02]}, {
+     Scaled[0.05], 
+     Scaled[0.05]}},
+  Ticks->{Automatic, Automatic}]], "Output",
+ CellChangeTimes->{
+  3.6393482190181227`*^9, {3.6393483393062363`*^9, 3.63934835455308*^9}, 
+   3.6393486452627277`*^9, {3.639349800566906*^9, 3.6393498483912086`*^9}, {
+   3.63934987968637*^9, 3.6393498938077097`*^9}, 3.639349943015679*^9, 
+   3.639350178329338*^9, {3.6394047094870787`*^9, 3.639404734326133*^9}, {
+   3.639404764700663*^9, 3.63940490425828*^9}, {3.6394153915823507`*^9, 
+   3.6394154193430862`*^9}, 3.639415537071063*^9, {3.639415668914583*^9, 
+   3.6394156984694843`*^9}, 3.639415736151849*^9, 3.639415789116287*^9, {
+   3.639415832413805*^9, 3.639415857209022*^9}, {3.6394159411527987`*^9, 
+   3.639416003390869*^9}, 3.639416044564921*^9, {3.6394161669483747`*^9, 
+   3.639416329786791*^9}, 3.63944427276678*^9, {3.639444710738038*^9, 
+   3.639444721435512*^9}, 3.639444777055715*^9, 3.639445091118712*^9, 
+   3.639445142129051*^9, 3.6394452932533493`*^9, 3.639445344607223*^9, 
+   3.639445410056614*^9, {3.639445446504719*^9, 3.639445463516061*^9}, 
+   3.639445620012721*^9, 3.639532261335127*^9, 3.639534549377302*^9, {
+   3.697072596890167*^9, 3.6970726324801807`*^9}, 3.7036793047055483`*^9}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{1111, 684},
+WindowMargins->{{Automatic, 0}, {Automatic, 0}},
+Magnification->1.5,
+FrontEndVersion->"11.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (September \
+21, 2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 116, 1, 95, "Section"],
+Cell[699, 25, 11049, 211, 1847, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[11785, 241, 199, 3, 95, "Section"],
+Cell[11987, 246, 10380, 235, 1661, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[22404, 486, 234, 3, 95, "Section"],
+Cell[22641, 491, 17110, 386, 3273, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[39788, 882, 273, 4, 95, "Section"],
+Cell[40064, 888, 9638, 195, 2095, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[49739, 1088, 320, 4, 95, "Section"],
+Cell[50062, 1094, 6392, 143, 1010, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[56491, 1242, 397, 5, 95, "Section"],
+Cell[56891, 1249, 8062, 164, 1785, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[64990, 1418, 456, 6, 95, "Section"],
+Cell[CellGroupData[{
+Cell[65471, 1428, 6620, 158, 1103, "Input"],
+Cell[72094, 1588, 3086, 62, 547, "Output"],
+Cell[75183, 1652, 3147, 64, 538, "Output"],
+Cell[78333, 1718, 3159, 64, 538, "Output"],
+Cell[81495, 1784, 3147, 64, 538, "Output"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
